@@ -5,11 +5,9 @@ require_once '../bootstrap.php';
 
 use NFePHP\Common\Certificate;
 use NFePHP\NFSeDSF\Tools;
-use NFePHP\NFSeDSF\Common\Soap\SoapFake;
-use NFePHP\NFSeDSF\Common\FakePretty;
+use NFePHP\NFSeDSF\Common\Soap\SoapCurl;
 
 try {
-    
     $config = [
         'cnpj' => '99999999000191',
         'im' => '1733160024',
@@ -18,24 +16,22 @@ try {
         'tpamb' => 2 //1-producao, 2-homologacao
     ];
 
-    $configJson = json_encode($config);
-
     $content = file_get_contents('expired_certificate.pfx');
     $password = 'associacao';
     $cert = Certificate::readPfx($content, $password);
-    
-    $soap = new SoapFake();
-    $soap->disableCertValidation(true);
-    
-    $tools = new Tools($configJson, $cert);
+
+    $soap = new SoapCurl($cert);
+    $soap->setDebugMode(true);
+
+    $tools = new Tools($config, $cert);
     $tools->loadSoapClass($soap);
 
-    $lote = '123456';
+    $lote = '942633';
 
     $response = $tools->consultarLote($lote);
 
-    echo FakePretty::prettyPrint($response, '');
- 
+    header('Content-Type: application/xml; charset=iso-8859-1');
+    echo $response;
 } catch (\Exception $e) {
     echo $e->getMessage();
 }

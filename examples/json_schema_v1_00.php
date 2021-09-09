@@ -297,7 +297,7 @@ $jsonSchema = '{
                         "pattern": "^(S|N)$"
                     }
                 }
-            }    
+            }
         },
         "itens": {
             "required": true,
@@ -363,7 +363,7 @@ $std->cidadetomadordescricao = 'TERESINA';
 $std->ceptomador = '64001210';
 $std->emailtomador = 'res@bol.com.br';
 $std->codigoatividade = '412040000';
-$std->aliquotaatividade = 5.00; 
+$std->aliquotaatividade = 5.00;
 $std->tiporecolhimento = 'A';
 $std->municipioprestacao = '0001219';
 $std->municipioprestacaodescricao = 'TERESINA';
@@ -439,4 +439,4 @@ if ($jsonValidator->isValid()) {
     die;
 }
 //salva se sucesso
-file_put_contents("../storage/jsonSchemes/rps.schema", $jsonSchema);
+file_put_contents("../storage/jsonSchemes/rps.json", $jsonSchema);

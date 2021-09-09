@@ -24,14 +24,14 @@ class SoapFake extends SoapBase implements SoapInterface
 {
     /**
      * Constructor
-     * @param Certificate $certificate
-     * @param LoggerInterface $logger
+     * @param Certificate|null $certificate
+     * @param LoggerInterface|null $logger
      */
     public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
     {
         parent::__construct($certificate, $logger);
     }
-    
+
     public function send(
         $operation,
         $url,
@@ -41,8 +41,8 @@ class SoapFake extends SoapBase implements SoapInterface
     ) {
         $requestHead = implode("\n", $parameters);
         $requestBody = $envelope;
-        
-        return \Safe\json_encode([
+
+        return json_encode([
             'url' => $url,
             'operation' => $operation,
             'action' => $action,

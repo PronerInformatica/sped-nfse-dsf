@@ -15,6 +15,7 @@ namespace NFePHP\NFSeDSF;
  * @link      http://github.com/nfephp-org/sped-nfse-dsf for the canonical source repository
  */
 
+use RuntimeException;
 use stdClass;
 use NFePHP\Common\Certificate;
 use NFePHP\NFSeDSF\RpsInterface;
@@ -35,7 +36,7 @@ class Rps implements RpsInterface
      * @var string
      */
     protected $jsonschema;
-    
+
     protected $assinatura;
 
 
@@ -47,35 +48,35 @@ class Rps implements RpsInterface
     {
         $this->init($rps);
     }
-    
+
     /**
      * Convert Rps::class data in XML
-     * @param Certificate $certificate
+     * @param Certificate|null $certificate
      * @return string
      */
-    public function render(Certificate $certificate = null)
+    public function render(Certificate $certificate = null): string
     {
         $fac = new Factory($this->std);
         return $fac->render($certificate);
     }
-    
+
     /**
      * Inicialize properties and valid input
      * @param stdClass $rps
      */
     private function init(stdClass $rps)
     {
-        $this->std = $this->propertiesToLower($rps);
-        $this->jsonschema = \Safe\realpath("../storage/jsonSchemes/rps.schema");
+        $this->std = $rps;
+        $this->jsonschema = realpath("../storage/jsonSchemes/rps.json");
         $this->validInputData($this->std);
     }
-    
+
     /**
      * Change properties names of stdClass to lower case
      * @param stdClass $data
      * @return stdClass
      */
-    public static function propertiesToLower(stdClass $data)
+    public static function propertiesToLower(stdClass $data): stdClass
     {
         $properties = get_object_vars($data);
         $clone = new stdClass();
@@ -93,9 +94,9 @@ class Rps implements RpsInterface
      * Validation json data from json Schema
      * @param stdClass $data
      * @return boolean
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
-    protected function validInputData($data)
+    protected function validInputData(stdClass $data): bool
     {
         if (!is_file($this->jsonschema)) {
             return true;
@@ -105,7 +106,7 @@ class Rps implements RpsInterface
         if (!$validator->isValid()) {
             $msg = "";
             foreach ($validator->getErrors() as $error) {
-                $msg .= \Safe\sprintf("[%s] %s\n", $error['property'], $error['message']);
+                $msg .= sprintf("[%s] %s\n", $error['property'], $error['message']);
             }
             throw new \InvalidArgumentException($msg);
         }

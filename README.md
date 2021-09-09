@@ -1,21 +1,10 @@
 # sped-nfse-dsf
 
-# ABANDONADO NÃO SERÁ MAIS MANTIDO
+# ADAPTAÇÃO PARA THEMA
 
 O modelo de NFSe denomindado DSF (ou IssDSF ou ainda DSFNet)
 
-Atende as prefeituras de:
-
-- Belém (PA)
-- Campinas (SP)
-- Campo Grande (MS)
-- Nova Igraçu (RJ)
-- São Luiz (MA)
-- Sorocaba (SP)
-- Teresina (PI)
-- Uberlândia (MG)
-
-> **NOTA: Apenas São Luiz (MA) possui ambiente de homologação !!** portanto todos os testes nos demais municipios deverão ser realizados em ambiente de produção. 
+**Atende as prefeituras de que utilizam o sistema da THEMA**
 
 [![Latest Stable Version][ico-stable]][link-packagist]
 [![Build Status][ico-travis]][link-travis]

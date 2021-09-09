@@ -25,15 +25,40 @@ use NFePHP\NFSeDSF\Common\Soap\SoapCurl;
 class Tools
 {
     public $lastRequest;
-    
+
     protected $config;
     protected $prestador;
     protected $certificate;
     protected $wsobj;
     protected $soap;
     protected $environment;
-    
+
     protected $urls = [
+        '4317608' => [
+            'municipio' => 'Santo Antônio da Patrulha',
+            'uf' => 'RS',
+            'siaf' => '8855',
+            'homologacao' => [
+                'recepcionarLoteRps' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEremessa',
+                'cancelarNfse' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEcancelamento',
+                'consultarLoteRps' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEconsulta',
+                'consultarNfsePorRps' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEconsulta',
+                'consultarNfse' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEconsulta',
+                'retornarDadosCadastrais' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEdadosCadastrais',
+            ],
+            'producao' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEremessa',
+            'version' => '1',
+            'msgns' => '',
+            'soapns' => 'http://server.nfse.thema.inf.br',
+            'sign' => [
+                'recepcionarLoteRps' => true,
+                'cancelarNfse' => true,
+                'consultarLoteRps' => false,
+                'consultarNfsePorRps' => false,
+                'consultarNfse' => false,
+                'retornarDadosCadastrais' => false
+            ]
+        ],
         '150142' => [
             'municipio' => 'Belem',
             'uf' => 'PA',
@@ -171,7 +196,7 @@ class Tools
             ]
         ]
     ];
-    
+
     /**
      * Constructor
      * @param string $config
@@ -179,17 +204,16 @@ class Tools
      */
     public function __construct($config, Certificate $cert)
     {
-        $this->config = \Safe\json_decode($config);
+        $this->config = json_decode($config);
         $this->certificate = $cert;
         $this->buildPrestadorTag();
-        $wsobj = $this->urls;
-        $this->wsobj = \Safe\json_decode(\Safe\json_encode($this->urls[$this->config->cmun]));
+        $this->wsobj = json_decode(json_encode($this->urls[$this->config->cmun]));
         $this->environment = 'homologacao';
         if ($this->config->tpamb === 1) {
             $this->environment = 'producao';
         }
     }
-    
+
     /**
      * SOAP communication dependency injection
      * @param SoapInterface $soap
@@ -198,7 +222,7 @@ class Tools
     {
         $this->soap = $soap;
     }
-    
+
     /**
      * Build tag Prestador
      */
@@ -231,7 +255,7 @@ class Tools
         $dom->loadXML($xml);
         return $dom->saveXML($dom->documentElement);
     }
-    
+
     /**
      * Send message to webservice
      * @param string $message
@@ -240,20 +264,29 @@ class Tools
      */
     public function send($message, $operation)
     {
-        $action = "";
-        $url = $this->wsobj->homologacao;
-        if ($this->environment === 'producao') {
-            $url = $this->wsobj->producao;
+        $action = $operation;
+        if (is_object($this->wsobj->homologacao)) {
+            $url = $this->wsobj->homologacao->$operation;
+        } else {
+            $url = $this->wsobj->homologacao;
         }
+        if ($this->environment === 'producao') {
+            if (is_array($this->wsobj->producao)) {
+                $url = $this->wsobj->producao->$operation;
+            } else {
+                $url = $this->wsobj->producao;
+            }
+        }
+
         $request = $this->createSoapRequest($message, $operation);
         $this->lastRequest = $request;
-        
+
         if (empty($this->soap)) {
             $this->soap = new SoapCurl($this->certificate);
         }
         $msgSize = strlen($request);
         $parameters = [
-            "Content-Type: text/xml;charset=UTF-8",
+            "Content-Type: text/xml;charset=iso-8859-1",
             "SOAPAction: \"$action\"",
             "Content-length: $msgSize"
         ];
@@ -266,7 +299,7 @@ class Tools
         );
         return $response; //$this->extractContentFromResponse($response, $operation);
     }
-    
+
     /**
      * Extract xml response from CDATA outputXML tag
      * @param string $response Return from webservice
@@ -291,27 +324,38 @@ class Tools
      * @param string $operation
      * @return string XML SOAP request
      */
-    protected function createSoapRequest($message, $operation)
+    protected function createSoapRequest(string $message, string $operation): string
     {
-        $env = "<soapenv:Envelope "
-            . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-            . "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-            . "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-            . "xmlns:dsf=\"{$this->wsobj->soapns}\">"
-            . "<soapenv:Body>"
-            . "<dsf:$operation soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"
-            . "<mensagemXml xsi:type=\"xsd:string\"></mensagemXml>"
-            . "</dsf:$operation>"
-            . "</soapenv:Body>"
-            . "</soapenv:Envelope>";
-
         $dom = new Dom('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
-        $dom->loadXML($env);
-        $node = $dom->getElementsByTagName('mensagemXml')->item(0);
-        $cdata = $dom->createCDATASection($message);
-        $node->appendChild($cdata);
+
+        if ($operation == "retornarDadosCadastrais") {
+            $env = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"> "
+                . "<soap:Body>"
+                . $message
+                . "</soap:Body>"
+                . "</soap:Envelope>";
+            $dom->loadXML($env);
+        } else {
+            $env = "<soapenv:Envelope "
+                . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                . "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+                . "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
+                . "xmlns:dsf=\"{$this->wsobj->soapns}\">"
+                . "<soapenv:Body>"
+                . "<dsf:$operation soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"
+                . "<xml xsi:type=\"xsd:string\"></xml>"
+                . "</dsf:$operation>"
+                . "</soapenv:Body>"
+                . "</soapenv:Envelope>";
+
+            $dom->loadXML($env);
+            $node = $dom->getElementsByTagName('xml')->item(0);
+            $cdata = $dom->createCDATASection($message);
+            $node->appendChild($cdata);
+        }
+
         return $dom->saveXML($dom->documentElement);
     }
 
@@ -320,7 +364,7 @@ class Tools
      * @param RpsInterface $rps
      * @return string RPS XML (not signed)
      */
-    protected function putPrestadorInRps(RpsInterface $rps)
+    protected function putPrestadorInRps(RpsInterface $rps): string
     {
         $dom = new Dom('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;

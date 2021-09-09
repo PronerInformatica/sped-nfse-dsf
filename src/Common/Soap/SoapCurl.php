@@ -25,14 +25,14 @@ class SoapCurl extends SoapBase implements SoapInterface
 {
     /**
      * Constructor
-     * @param Certificate $certificate
-     * @param LoggerInterface $logger
+     * @param Certificate|null $certificate
+     * @param LoggerInterface|null $logger
      */
     public function __construct(Certificate $certificate = null, LoggerInterface $logger = null)
     {
         parent::__construct($certificate, $logger);
     }
-    
+
     /**
      * Send soap message to url
      * @param string $operation
@@ -41,7 +41,7 @@ class SoapCurl extends SoapBase implements SoapInterface
      * @param string $envelope
      * @param array $parameters
      * @return string
-     * @throws \NFePHP\Common\Exception\SoapException
+     * @throws SoapException
      */
     public function send(
         $operation,
@@ -49,11 +49,11 @@ class SoapCurl extends SoapBase implements SoapInterface
         $action,
         $envelope,
         $parameters
-    ) {
+    ): string {
         $response = '';
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
-        
+
         try {
             $this->saveTemporarilyKeyFiles();
             $oCurl = curl_init();
@@ -118,13 +118,13 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         return $this->responseBody;
     }
-    
+
     /**
      * Recover WSDL form given URL
      * @param string $url
      * @return string
      */
-    public function wsdl($url)
+    public function wsdl(string $url): string
     {
         $response = '';
         $this->saveTemporarilyKeyFiles();
@@ -154,7 +154,7 @@ class SoapCurl extends SoapBase implements SoapInterface
         }
         return $response;
     }
-    
+
     /**
      * Set proxy into cURL parameters
      * @param resource $oCurl
@@ -171,7 +171,7 @@ class SoapCurl extends SoapBase implements SoapInterface
             }
         }
     }
-    
+
     /**
      * Extract faultstring form response if exists
      * @param string $body
