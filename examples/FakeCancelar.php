@@ -31,8 +31,8 @@ try {
 
     $response = $tools->cancelar($numero, $codigoverificacao);
 
-    header("Content-type: text/xml");
-    echo $response;
+    header('Content-Type: application/xml; charset=iso-8859-1');
+    echo $response['response'];
 } catch (\Exception $e) {
     echo $e->getMessage();
 }

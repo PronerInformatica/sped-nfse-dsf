@@ -106,6 +106,8 @@ try {
 
 //    $std->ContrucaoCivil = $stdContrucaoCivil;
 
+    echo json_encode($std);
+
     $rps = new Rps($std);
 
     $arps[] = $rps;

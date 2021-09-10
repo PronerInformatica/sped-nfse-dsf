@@ -31,7 +31,7 @@ try {
     $response = $tools->consultarLote($lote);
 
     header('Content-Type: application/xml; charset=iso-8859-1');
-    echo $response;
+    echo $response['response'];
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
