@@ -304,12 +304,14 @@ class Factory
 
         $IdentificacaoTomador->appendChild($CpfCnpjTomador);
 
-        $this->dom->addChild(
-            $IdentificacaoTomador,
-            "InscricaoMunicipal",
-            $this->std->Tomador->InscricaoMunicipal,
-            true
-        );
+        if(!empty($this->std->Tomador->InscricaoMunicipal)) {
+            $this->dom->addChild(
+                $IdentificacaoTomador,
+                "InscricaoMunicipal",
+                $this->std->Tomador->InscricaoMunicipal,
+                true
+            );
+        }
 
         $Tomador->appendChild($IdentificacaoTomador);
 
@@ -373,23 +375,29 @@ class Factory
 
         $Tomador->appendChild($EnderecoTomador);
 
-        $ContatoTomador = $this->dom->createElement('Contato');
+        if(!empty($this->std->Tomador->Telefone) || !empty($this->std->Tomador->Email)) {
+            $ContatoTomador = $this->dom->createElement('Contato');
 
-        $this->dom->addChild(
-            $ContatoTomador,
-            "Telefone",
-            $this->std->Tomador->Telefone,
-            true
-        );
+            if(!empty($this->std->Tomador->Telefone)) {
+                $this->dom->addChild(
+                    $ContatoTomador,
+                    "Telefone",
+                    $this->std->Tomador->Telefone,
+                    true
+                );
+            }
 
-        $this->dom->addChild(
-            $ContatoTomador,
-            "Email",
-            $this->std->Tomador->Email,
-            true
-        );
+            if(!empty($this->std->Tomador->Email)) {
+                $this->dom->addChild(
+                    $ContatoTomador,
+                    "Email",
+                    $this->std->Tomador->Email,
+                    true
+                );
+            }
 
-        $Tomador->appendChild($ContatoTomador);
+            $Tomador->appendChild($ContatoTomador);
+        }
 
         $InfRps->appendChild($Tomador);
 
