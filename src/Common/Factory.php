@@ -338,12 +338,14 @@ class Factory
             true
         );
 
-        $this->dom->addChild(
-            $EnderecoTomador,
-            "Complemento",
-            $this->std->Tomador->Complemento,
-            true
-        );
+        if(!empty($this->std->Tomador->Complemento)) {
+            $this->dom->addChild(
+                $EnderecoTomador,
+                "Complemento",
+                $this->std->Tomador->Complemento,
+                true
+            );
+        }
 
         $this->dom->addChild(
             $EnderecoTomador,
