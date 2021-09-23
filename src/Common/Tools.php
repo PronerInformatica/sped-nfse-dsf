@@ -216,7 +216,7 @@ class Tools
         $this->buildPrestadorTag();
         $this->wsobj = json_decode(json_encode($this->urls[$this->config->cmun]));
         $this->environment = 'homologacao';
-        if ($this->config->tpamb === 1) {
+        if ($this->config->tpamb == 1) {
             $this->environment = 'producao';
         }
     }
@@ -278,7 +278,7 @@ class Tools
             $url = $this->wsobj->homologacao;
         }
         if ($this->environment === 'producao') {
-            if (is_array($this->wsobj->producao)) {
+            if (is_object($this->wsobj->producao)) {
                 $url = $this->wsobj->producao->$operation;
             } else {
                 $url = $this->wsobj->producao;
