@@ -41,6 +41,7 @@ class Tools
             'homologacao' => [
                 'recepcionarLoteRps' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEremessa',
                 'cancelarNfse' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEcancelamento',
+                'consultarSituacaoLoteRps' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEconsulta',
                 'consultarLoteRps' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEconsulta',
                 'consultarNfsePorRps' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEconsulta',
                 'consultarNfse' => 'https://pmsap.thema.cloud/nfsehml/services/NFSEconsulta',
@@ -49,6 +50,7 @@ class Tools
             'producao' => [
                 'recepcionarLoteRps' => 'https://nfse.pmsap.com.br/thema-nfse/services/NFSEremessa',
                 'cancelarNfse' => 'https://nfse.pmsap.com.br/thema-nfse/services/NFSEcancelamento',
+                'consultarSituacaoLoteRps' => 'https://nfse.pmsap.com.br/thema-nfse/services/NFSEconsulta',
                 'consultarLoteRps' => 'https://nfse.pmsap.com.br/thema-nfse/services/NFSEconsulta',
                 'consultarNfsePorRps' => 'https://nfse.pmsap.com.br/thema-nfse/services/NFSEconsulta',
                 'consultarNfse' => 'https://nfse.pmsap.com.br/thema-nfse/services/NFSEconsulta',

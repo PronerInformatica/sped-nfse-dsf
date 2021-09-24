@@ -107,6 +107,28 @@ class Tools extends BaseTools
     }
 
     /**
+     * Consulta Situação pelo número do lote
+     * @param string $lote
+     * @return array
+     */
+    public function consultarSituacaoLote(string $lote): array
+    {
+        $operation = "consultarSituacaoLoteRps";
+
+        $content  = "<ConsultarSituacaoLoteRpsEnvio xmlns=\"http://www.abrasf.org.br/ABRASF/arquivos/nfse.xsd\">";
+        $content .= "<Prestador>";
+        $content .= "<Cnpj>{$this->config['cnpj']}</Cnpj>";
+        $content .= "<InscricaoMunicipal>{$this->config['im']}</InscricaoMunicipal>";
+        $content .= "</Prestador>";
+        $content .= "<Protocolo>$lote</Protocolo>";
+        $content .= "</ConsultarSituacaoLoteRpsEnvio>";
+
+        Validator::isValid($content, $this->xsdpath."/ReqConsultaSituacaoLote.xsd");
+
+        return ['content'=> $content, 'response'=>$this->send($content, $operation)];
+    }
+
+    /**
      * Consulta Notas pelo número do lote
      * @param string $lote
      * @return array

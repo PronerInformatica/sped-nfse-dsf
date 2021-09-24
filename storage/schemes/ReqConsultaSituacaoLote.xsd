@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tipos="http://www.abrasf.org.br/ABRASF/arquivos/nfse.xsd">
+	<xsd:import
+        namespace="http://www.abrasf.org.br/ABRASF/arquivos/nfse.xsd"
+        schemaLocation="Tipos.xsd"/>
+    <xsd:element name="ConsultarSituacaoLoteRpsEnvio">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Prestador" type="tipos:tcIdentificacaoPrestador" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="Protocolo" type="tipos:tsNumeroProtocolo" minOccurs="1" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
