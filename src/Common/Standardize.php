@@ -44,6 +44,7 @@ class Standardize
         'EnviarLoteRpsEnvio',
         'GerarNfseEnvio',
         'CancelarNfseResposta',
+        'ConsultarSituacaoLoteRpsResposta',
         'ConsultarLoteRpsResposta',
         'ConsultarNfseResposta',
         'ConsultarNfseFaixaResposta',
