@@ -36,6 +36,7 @@ class Standardize
      */
     public $rootTagList = [
         'CancelarNfseEnvio',
+        'ConsultarSituacaoLoteRpsEnvio',
         'ConsultarLoteRpsEnvio',
         'ConsultarNfseEnvio',
         'ConsultarNfseFaixaEnvio',
@@ -51,12 +52,12 @@ class Standardize
         'GerarNfseEnvio',
         'RPS'
     ];
-    
+
     public function __construct($xml = null)
     {
         $this->toStd($xml);
     }
-    
+
     /**
      * Identify node and extract from XML for convertion type
      * @param string $xml
@@ -87,7 +88,7 @@ class Standardize
             "Este xml não pertence ao projeto NFSe Nacional."
         );
     }
-    
+
     /**
      * Returns extract node from XML
      * @return string
@@ -96,7 +97,7 @@ class Standardize
     {
         return $this->node;
     }
-    
+
     /**
      * Returns stdClass converted from xml
      * @param string $xml
@@ -115,7 +116,7 @@ class Standardize
         );
         return \Safe\json_decode($this->json);
     }
-    
+
     /**
      * Retruns JSON string form XML
      * @param string $xml
@@ -128,7 +129,7 @@ class Standardize
         }
         return $this->json;
     }
-    
+
     /**
      * Returns array from XML
      * @param string $xml
