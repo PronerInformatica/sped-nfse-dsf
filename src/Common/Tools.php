@@ -58,7 +58,7 @@ class Tools
             ],
             'version' => '1',
             'msgns' => '',
-            'soapns' => 'https://server.nfse.thema.inf.br',
+            'soapns' => 'http://server.nfse.thema.inf.br',
             'sign' => [
                 'recepcionarLoteRps' => true,
                 'cancelarNfse' => true,
