@@ -186,6 +186,13 @@ class Factory
 
         $this->dom->addChild(
             $Valores,
+            "ValorIssRetido",
+            $this->std->Servico->ValorIssRetido,
+            true
+        );
+
+        $this->dom->addChild(
+            $Valores,
             "OutrasRetencoes",
             $this->std->Servico->OutrasRetencoes,
             true
